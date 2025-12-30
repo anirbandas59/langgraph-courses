@@ -1,5 +1,7 @@
 """Graph workflow definition."""
 
+import os
+
 from dotenv import load_dotenv
 from langgraph.graph import END, StateGraph
 
@@ -13,8 +15,14 @@ from utils import print_step
 
 load_dotenv()
 
+# Enable LangSmith tracing for observability
+if os.getenv("LANGSMITH_API_KEY"):
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGSMITH_PROJECT", "adaptive-rag-workflow")
+    os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 
-def decide_to_generate(state: GraphState):
+
+def decide_to_generate(state: GraphState) -> str:  # Added return type hint
     # print(f"{'=' * 7} ASSESS GRADED DOCUMENTS {'=' * 7}")  # Replaced with print_step
     print_step("ASSESS GRADED DOCUMENTS", "Evaluating document relevance", "yellow")
 
