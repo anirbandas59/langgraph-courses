@@ -5,13 +5,15 @@ from langchain_core.documents import Document
 from langchain_tavily import TavilySearch
 
 from graph.state import GraphState
+from utils import print_step
 
 load_dotenv()
 web_search_tool = TavilySearch(max_results=3)
 
 
 def web_search(state: GraphState) -> Dict[str, Any]:
-    print(f"{'-' * 7} WEB SEARCH {'-' * 7}")
+    # print(f"{'-' * 7} WEB SEARCH {'-' * 7}")  # Replaced with print_step
+    print_step("WEB SEARCH", "Searching the web for additional information", "cyan")
     question = state["question"]
 
     if "documents" in state:
@@ -32,6 +34,7 @@ def web_search(state: GraphState) -> Dict[str, Any]:
     else:
         documents = [web_results]
 
+    print_step("WEB SEARCH", f"✓ Found {len(tavily_search_results)} web results", "green")
     return {"documents": documents, "question": question}
 
 
